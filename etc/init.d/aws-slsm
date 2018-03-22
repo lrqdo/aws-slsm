@@ -1,0 +1,29 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          aws-slsm
+# Required-Start:    $local_fs $remote_fs $syslog $network
+# Required-Stop:
+# Should-Start:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 6
+# Short-Description: create cloudwatch alarms
+# Description:       create cloudwatch alarms when the server start
+### END INIT INFO
+
+case "$1" in
+  start)
+    echo "Creating CloudWatch alarms"
+    /usr/local/bin/aws-slsm --set-alarms
+    ;;
+  stop)
+    echo "Deleting CloudWatch alarms"
+    /usr/local/bin/aws-slsm --remove-alarms
+    ;;
+  *)
+    echo "Usage: /etc/init.d/aws-slsm {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0

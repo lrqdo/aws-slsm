@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+if ARGV[0].nil?
+  STDERR.puts 'Please specify the port-address you want to check'
+  exit 1
+end
+
+if ARGV[1].nil?
+  STDERR.puts 'Please specify the service for which you want to check the port'
+  exit 1
+end
+
+ADDRESS = ARGV[0]
+SERVICE = ARGV[1]
+count = `ss -lntp | grep -- '\s#{ADDRESS}\s.*"#{SERVICE}"'`.split(/\n/).length
+puts "#{count} Count"
+
+exit 0

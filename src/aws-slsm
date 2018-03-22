@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# AWS simple linux server monitoring is a script to monitor
+# linux server using ruby cron and AWS cloudwatch
+# Copyright (C) 2017 Marc Millien
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+require 'getoptlong'
+require 'yaml'
+
+conf_file = nil
+probe_action = nil
+opts = GetoptLong.new(
+  ['--help', '-h', GetoptLong::NO_ARGUMENT],
+  ['--conf', '-c', GetoptLong::REQUIRED_ARGUMENT],
+  ['--set-alarms', '-s', GetoptLong::NO_ARGUMENT],
+  ['--remove-alarms', '-r', GetoptLong::NO_ARGUMENT]
+)
+opts.each do |opt, arg|
+  case opt
+  when '--help'
+    puts <<-USAGE
+Options:
+  --help|-h (optional)              prints this help
+  --conf|-c (optional)              configuration file
+      default: #{conf_file}
+  --set-alarms|-s                   initialize alarms
+  --remove-alarms|-r                remove alarms
+    USAGE
+    exit 1
+  when '--conf'
+    conf_file = arg
+  when '--set-alarms'
+    probe_action = 'create_alarm'
+  when '--remove-alarms'
+    probe_action = 'delete_alarm'
+  end
+end
+
+conf = YAML.safe_load(File.open(conf_file.nil? ? '/etc/aws-slsm/config.yml' : conf_file))
+$LOAD_PATH << conf['lib_dir']
+
+require 'pid'
+require 'monitoring'
+Pid.new('/var/run/aws-mon.pid').write unless probe_action == 'create_alarm'
+monitoring = Monitoring.new(
+  aws_key: conf['aws']['key'],
+  aws_secret: conf['aws']['secret'],
+  aws_region: conf['aws']['region'],
+  plugin_dir: conf['plugin_dir'],
+  var_dir: conf['var_dir'],
+  namespace: conf['cloudwatch']['namespace'],
+  action: conf['cloudwatch']['action'],
+  checks: conf['checks']
+)
+
+case probe_action
+when 'create_alarm'
+  monitoring.create
+when 'delete_alarm'
+  monitoring.delete
+else
+  monitoring.run
+end

@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+if ARGV[0].nil?
+  STDERR.puts(
+    'Please specify the folder for which you want to get number of files'
+  )
+  exit 1
+end
+
+find = "find #{ARGV[0]}"
+type = '-type f'
+find_command = ARGV[1].nil? ? "#{find} #{type}" : "#{find} -iname '#{ARGV[1]}' #{type}"
+counter = `#{find_command} 2> /dev/null | wc -l`.chomp
+
+puts "#{counter} Count"
+
+exit 0

@@ -1,0 +1,18 @@
+# example config
+aws:
+  region: 'eu-west-1'
+  key: '-'
+  secret: '-'
+plugin_dir: '/usr/local/shared/aws-simple-linux-server-monitoring/plugins'
+lib_dir: '/usr/local/shared/aws-simple-linux-server-monitoring/lib'
+var_dir: '/var/lib/aws-simple-linux-server-monitoring'
+cloudwatch:
+  namespace: 'server-monitoring'
+  action: 'arn:aws:sns:eu-west-1:123456789:alarm'
+checks:
+  load1:
+    probe: 'load 1'
+    alarm: 'Average > 10 2x60s'
+  inode_root:
+    probe: 'inodes /'
+    alarm: 'Average >= 90 2x300s'

@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+LOAD_FILE = '/proc/loadavg'
+
+if ARGV[0].nil? || !%w[1 5 15].include?(ARGV[0])
+  STDERR.puts 'Please provide if you want to monitore load 1, 5 or 15'
+  exit 1
+end
+ARGV[0] == '1' && i = 0
+ARGV[0] == '5' && i = 1
+ARGV[0] == '15' && i = 2
+
+res = File.open(LOAD_FILE).read.split(' ')
+puts "#{res[i]} None"
+
+exit 0

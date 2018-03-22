@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  ruby:
+    build: .
+    command: rake
+    volumes:
+      - .:/var/www
+      - ./plugins:/usr/local/shared/aws-simple-linux-server-monitoring/plugins
+      - ./lib:/usr/local/shared/aws-simple-linux-server-monitoring/lib
+      - ./etc/aws-slsm:/etc/aws-slsm
