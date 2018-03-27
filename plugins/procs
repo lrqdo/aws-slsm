@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+PS = '/bin/ps'
+
+if ARGV[0].nil?
+  STDERR.puts 'Please provide the process name'
+  exit 1
+end
+process = ARGV[0]
+
+ps_output = `#{PS} -C  #{process}| sed 1d | wc -l`.chomp
+puts "#{ps_output} None"
+
+exit 0

@@ -1,0 +1,29 @@
+AllCops:
+  TargetRubyVersion: 2.3
+
+Layout/IndentHeredoc:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 30
+
+Metrics/BlockLength:
+  Max: 30
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 50
+
+Naming/FileName:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: false

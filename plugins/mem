@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+MEM_FILE = '/proc/meminfo'
+
+if ARGV[0].nil?
+  STDERR.puts 'Please specify the metric you want'
+  exit 1
+end
+metric = ARGV[0]
+
+File.open(MEM_FILE) do |f|
+  f.each_line do |line|
+    line =~ /#{metric}/ || next
+    elements = line.split(' ')
+    puts "#{elements[1]} Kilobytes"
+    exit 0
+  end
+end
+
+exit 1

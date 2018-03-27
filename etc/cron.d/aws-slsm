@@ -1,0 +1,2 @@
+MAILTO=your-email@your-provider.com
+* * * * * root /usr/local/bin/aws-slsm | logger -t aws-slsm

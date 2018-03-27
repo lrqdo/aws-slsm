@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+DF = '/bin/df'
+
+if ARGV[0].nil?
+  STDERR.puts 'Please provide the disk path'
+  exit 1
+end
+path = ARGV[0]
+
+if ARGV[1].nil?
+  STDERR.puts 'Please provide the disk metric in: size, used, free, percentused'
+  exit 1
+end
+metric = ARGV[1]
+
+i = 3
+unit = 'Megabytes'
+if metric == 'size'
+  i = 1
+elsif metric == 'used'
+  i = 2
+elsif metric == 'free'
+  i = 3
+elsif metric == 'percentused'
+  i = 4
+  unit = 'Percent'
+end
+
+df_output = `#{DF} -m -l -P #{path} | tail -1`.delete('%')
+res = df_output.split(' ')
+puts "#{res[i]} #{unit}"
+
+exit 0

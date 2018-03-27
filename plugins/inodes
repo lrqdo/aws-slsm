@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+DF = '/bin/df'
+
+if ARGV[0].nil?
+  puts 'Please provide the path'
+  exit 1
+end
+path = ARGV[0]
+
+# Do we have a folder ?
+unless File.directory?(path)
+  STDERR.puts 'Path not found'
+  exit 1
+end
+
+df_output = `#{DF} -hi #{path} | sed -n '2p' |awk '{print $5}' | grep -v U|cut -d% -f1`.chomp
+value = df_output =~ /^-$/ ? '0' : df_output
+puts "#{value} Percent"
+
+exit 0
